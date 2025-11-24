@@ -5,17 +5,23 @@ const DestinationCard = ({ destination }) => {
 
   return (
     <div className="destination-card">
-      <div className="card-image">
-        <img src={image} alt={name} />
-      </div>
+      {/* 1. 배경 이미지 */}
+      <img src={image} alt={name} className="bg-image" />
+      
+      {/* 2. 어두운 그라데이션 (글씨 잘 보이게) */}
+      <div className="overlay-gradient"></div>
+
+      {/* 3. 텍스트 및 버튼 내용 */}
       <div className="card-content">
-        <h3 className="destination-name">{name}</h3>
-        <p className="destination-country">{country}</p>
-        <p className="destination-description">{description}</p>
-        <div className="card-footer">
-          <span className="price">₩{price.toLocaleString()}</span>
-          <button className="btn-book">Book a Hotel</button>
+        <div className="text-info">
+          <div className="top-row">
+            <h3 className="city-name">{name}</h3>
+            <span className="price">₩{price.toLocaleString()}</span>
+          </div>
+          <p className="description">{description}</p>
         </div>
+        
+        <button className="btn-book">Book a Hotel</button>
       </div>
     </div>
   );
