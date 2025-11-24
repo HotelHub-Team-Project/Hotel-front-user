@@ -1,0 +1,101 @@
+@use "../../common/variables" as *;
+@use "../../common/mixins" as *;
+
+.newsletter-section {
+  background-color: #ccebe3; // 연한 민트색 배경
+  padding: 6rem 0;
+  position: relative;
+  overflow: hidden;
+
+  .newsletter-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    z-index: 1;
+
+    @include respond-md {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 3rem;
+    }
+  }
+
+  .text-content {
+    .newsletter-title {
+      font-size: 3.2rem;
+      font-weight: 800;
+      line-height: 1.3;
+      margin-bottom: 1.6rem;
+      color: $color-secondary;
+    }
+
+    .newsletter-desc {
+      font-size: 1.6rem;
+      line-height: 1.5;
+      color: $color-text-secondary;
+      font-weight: 500;
+    }
+  }
+
+  .newsletter-form {
+    flex: 0 0 50%;
+    width: 100%;
+    max-width: 50rem;
+
+    .input-group {
+      display: flex;
+      background: #fff;
+      padding: 0.5rem;
+      border-radius: 0.8rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+      .newsletter-input {
+        border: none;
+        background: transparent;
+        padding: 1.2rem 1.6rem;
+        font-size: 1.6rem;
+        
+        &:focus {
+          box-shadow: none;
+        }
+      }
+
+      .newsletter-btn {
+        background-color: #1a2b25; // 짙은 녹색 버튼
+        color: #fff;
+        padding: 1rem 2.4rem;
+        border-radius: 0.6rem;
+        font-weight: 600;
+        transition: opacity 0.2s;
+
+        &:hover {
+          opacity: 0.9;
+        }
+      }
+    }
+  }
+
+  // 우측 하단 우체통 일러스트 느낌의 장식 (필요 시 이미지로 교체)
+  .newsletter-illustration {
+    position: absolute;
+    right: -5rem;
+    bottom: -6rem;
+    width: 30rem;
+    height: 20rem;
+    background: #2f4538; // 일러스트 대신 색상 박스로 위치 표시
+    border-radius: 2rem 2rem 0 0;
+    opacity: 0.8;
+    z-index: -1;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      right: 20%;
+      top: 40%;
+      width: 40%;
+      height: 1rem;
+      background: #ff7b7b; // 핑크색 포인트
+    }
+  }
+}

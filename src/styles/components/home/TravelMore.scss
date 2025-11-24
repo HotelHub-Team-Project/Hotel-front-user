@@ -1,0 +1,154 @@
+@use "../../common/variables" as *;
+@use "../../common/mixins" as *;
+
+.travel-more {
+  padding: 6rem 0;
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+
+    .section-title {
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: $color-secondary;
+    }
+
+    .see-all-btn {
+      padding: 0.8rem 1.6rem;
+      border: 1px solid $color-border;
+      border-radius: 0.8rem;
+      background: #fff;
+      cursor: pointer;
+      &:hover { background: $color-bg-alt; }
+    }
+  }
+
+  .section-subtitle {
+    color: $color-text-secondary;
+    margin-bottom: 4rem;
+    max-width: 60rem;
+    font-size: 1.5rem;
+    line-height: 1.6;
+  }
+
+  .travel-content {
+    display: flex;
+    gap: 2rem;
+    height: 45rem; // 전체 높이 고정
+
+    @include respond-md {
+      flex-direction: column;
+      height: auto;
+    }
+  }
+}
+
+/* 왼쪽 큰 카드 (MalakaTour) */
+.malaka-tour-card {
+  flex: 1; // 50% 비율
+  background-color: #8FD3C6; // 민트색 배경 (이미지 없을 때)
+  background-image: url('/images/malaka.jpg'); // 실제 이미지 경로
+  background-size: cover;
+  background-position: center;
+  border-radius: 2rem;
+  overflow: hidden;
+  position: relative;
+  
+  @include respond-md {
+    min-height: 40rem;
+  }
+
+  .content-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 3rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+    color: #fff;
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
+
+      h3 {
+        font-size: 2.8rem;
+        font-weight: 700;
+      }
+      
+      .price-tag {
+        background: #fff;
+        color: $color-secondary;
+        padding: 0.8rem 1.2rem;
+        border-radius: 1rem;
+        text-align: center;
+        
+        .label { display: block; font-size: 1.2rem; color: $color-text-muted; }
+        .amount { display: block; font-size: 1.8rem; font-weight: 800; }
+      }
+    }
+
+    .description {
+      font-size: 1.4rem;
+      line-height: 1.6;
+      margin-bottom: 2.5rem;
+      opacity: 0.9;
+      @include text-ellipsis(3); // 3줄 이상 말줄임
+    }
+
+    .btn-book-flight {
+      width: 100%;
+      padding: 1.2rem;
+      background: #fff;
+      color: $color-secondary;
+      border: none;
+      border-radius: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      &:hover { background: #f9fafb; }
+    }
+  }
+}
+
+/* 오른쪽 이미지 그리드 (TravelGallery) */
+.travel-gallery {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 2rem;
+
+  @include respond-md {
+    height: 40rem; // 모바일에서의 높이
+  }
+
+  .gallery-item {
+    border-radius: 2rem;
+    overflow: hidden;
+    position: relative;
+    background-color: #e5e7eb; // 이미지 없을 때 회색
+
+    .placeholder-image {
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      transition: transform 0.3s;
+    }
+    
+    &:hover .placeholder-image {
+      transform: scale(1.05);
+    }
+    
+    // 임시: 각 아이템에 다른 배경색 부여 (이미지 대용)
+    &:nth-child(1) .placeholder-image { background-color: #A7C7E7; }
+    &:nth-child(2) .placeholder-image { background-color: #C1E1C1; }
+    &:nth-child(3) .placeholder-image { background-color: #FFD1DC; }
+    &:nth-child(4) .placeholder-image { background-color: #E6E6FA; }
+  }
+}

@@ -1,0 +1,74 @@
+@use "../../common/variables" as *;
+@use "../../common/mixins" as *;
+
+.header {
+  position: absolute; /* 히어로 이미지 위에 겹치도록 설정 */
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100; // 다른 요소보다 위에 오도록
+  padding: 2rem 0;
+  color: #fff; // 배경이 어두운 이미지라 가정하고 흰색 글씨
+
+  .inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: $max-width-container;
+    margin: 0 auto;
+    padding: 0 $gutter;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 2rem;
+    font-weight: 800;
+    color: inherit;
+    
+    .logo-icon {
+      font-size: 2.4rem;
+    }
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+
+    .header-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      cursor: pointer;
+      color: inherit;
+      transition: opacity 0.2s;
+
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+
+    .divider {
+      opacity: 0.5;
+    }
+
+    .user-profile {
+      .avatar {
+        width: 3rem;
+        height: 3rem;
+        background: #ddd;
+        border-radius: 50%;
+        color: #333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1.4rem;
+      }
+    }
+  }
+}
