@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-/* ... (아이콘, Swiper import 생략 - 기존 유지) ... */
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { faFacebook, faGoogle, faApple } from "@fortawesome/free-brands-svg-icons";
@@ -17,14 +16,20 @@ const SignupPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   
-  /* 입력값 상태 */
+  /* ✅ [Added] State to manage form inputs */
   const [formData, setFormData] = useState({
-    firstName: "", lastName: "", email: "", phone: "", password: "", confirmPassword: ""
+    firstName: "", 
+    lastName: "", 
+    email: "", 
+    phone: "", 
+    password: "", 
+    confirmPassword: ""
   });
 
   const navigate = useNavigate();
   const { login } = useAuth();
 
+  /* ✅ [Added] Handle input changes */
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormData(prev => ({ ...prev, [id]: value }));
@@ -33,31 +38,31 @@ const SignupPage = () => {
   const handleSignup = (e) => {
     e.preventDefault();
     
-    // 유효성 검사
+    // Basic Validation
     if (!formData.firstName || !formData.lastName) {
-      alert("이름을 입력해주세요.");
+      alert("Please enter your name.");
       return;
     }
     if (formData.password !== formData.confirmPassword) {
-      alert("비밀번호가 일치하지 않습니다.");
+      alert("Passwords do not match.");
       return;
     }
 
-    /* ✅ [핵심] Tomhoon이 아닌, 실제 입력한 이름으로 데이터 생성 */
+    /* ✅ [Key Update] Create user object with REAL input data */
     const newUser = {
-      name: `${formData.firstName} ${formData.lastName}`, // 예: Hong GilDong
+      name: `${formData.firstName} ${formData.lastName}`, // Combine First + Last Name
       email: formData.email,
+      // Add other fields as needed by your auth context/backend
     };
 
-    // 로그인 실행 (이제 AuthContext에서 이 데이터를 그대로 받아줌)
+    // Pass the real user data to the login function
     login(newUser); 
     
-    navigate("/"); // 홈으로 이동
+    navigate("/"); // Redirect to home
   };
 
   return (
     <div className="signup-page">
-      {/* ... (JSX 구조는 기존과 동일, form에 onSubmit={handleSignup} 필수) ... */}
       <div className="signup-container">
         <div className="image-section">
           <Swiper spaceBetween={0} slidesPerView={1} loop={true} speed={1000} autoplay={{ delay: 3500, disableOnInteraction: false }} pagination={{ clickable: true }} modules={[Autoplay, Pagination]} className="signup-swiper">
@@ -72,30 +77,36 @@ const SignupPage = () => {
           <form className="signup-form" onSubmit={handleSignup}>
             <div className="form-row">
               <div className="input-group">
+                {/* ✅ Added value and onChange */}
                 <input type="text" id="firstName" placeholder="Hong" value={formData.firstName} onChange={handleChange} required />
                 <label htmlFor="firstName">First Name</label>
               </div>
               <div className="input-group">
+                {/* ✅ Added value and onChange */}
                 <input type="text" id="lastName" placeholder="Gil-dong" value={formData.lastName} onChange={handleChange} required />
                 <label htmlFor="lastName">Last Name</label>
               </div>
             </div>
             <div className="form-row">
               <div className="input-group">
+                {/* ✅ Added value and onChange */}
                 <input type="email" id="email" placeholder="john.doe@gmail.com" value={formData.email} onChange={handleChange} required />
                 <label htmlFor="email">Email</label>
               </div>
               <div className="input-group">
+                {/* ✅ Added value and onChange */}
                 <input type="tel" id="phone" placeholder="010-1234-5678" value={formData.phone} onChange={handleChange} />
                 <label htmlFor="phone">Phone Number</label>
               </div>
             </div>
             <div className="input-group full-width">
+              {/* ✅ Added value and onChange */}
               <input type={showPassword ? "text" : "password"} id="password" placeholder="...................." value={formData.password} onChange={handleChange} required />
               <label>Password</label>
               <span className="toggle-password" onClick={() => setShowPassword(!showPassword)}><FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash} /></span>
             </div>
             <div className="input-group full-width">
+              {/* ✅ Added value and onChange, added id="confirmPassword" */}
               <input type={showConfirmPassword ? "text" : "password"} id="confirmPassword" placeholder="...................." value={formData.confirmPassword} onChange={handleChange} required />
               <label>Confirm Password</label>
               <span className="toggle-password" onClick={() => setShowConfirmPassword(!showConfirmPassword)}><FontAwesomeIcon icon={showConfirmPassword ? faEye : faEyeSlash} /></span>
