@@ -1,3 +1,4 @@
+/* 1. src/AppRouter.jsx */
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import MainLayout from "./components/layouts/MainLayout";
 import AuthLayout from "./components/layouts/AuthLayout";
@@ -10,6 +11,7 @@ import HomePage from "./pages/home/HomePage";
 import SearchPage from "./pages/search/SearchPage";
 import HotelListPage from "./pages/search/HotelListPage";
 import HotelDetailPage from "./pages/hotel/HotelDetailPage";
+import WishlistPage from "./pages/mypage/WishlistPage"; // ✅ WishlistPage 임포트 확인
 
 import BookingStepLayout from "./pages/booking/BookingStepLayout";
 import BookingStepDates from "./pages/booking/BookingStepDates";
@@ -31,7 +33,6 @@ import ProfilePage from "./pages/mypage/ProfilePage";
 import MyBookingsPage from "./pages/mypage/MyBookingsPage";
 import MyBookingDetailPage from "./pages/mypage/MyBookingDetailPage";
 import MyReviewsPage from "./pages/mypage/MyReviewsPage";
-import WishlistPage from "./pages/mypage/WishlistPage";
 import MyCouponsPage from "./pages/mypage/MyCouponsPage";
 import MyPointsPage from "./pages/mypage/MyPointsPage";
 import MyInquiriesPage from "./pages/mypage/MyInquiriesPage";
@@ -47,7 +48,7 @@ const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
-        {/* ✅ [수정됨] MainLayout 안에 고객센터 라우트를 포함시켰습니다. */}
+        {/* 메인 레이아웃 (헤더/푸터 포함) */}
         <Route path="/" element={<MainLayout />}>
           {/* 메인 홈 */}
           <Route index element={<HomePage />} />
@@ -59,7 +60,10 @@ const AppRouter = () => {
             <Route path=":hotelId" element={<HotelDetailPage />} />
           </Route>
 
-          {/* ✅ 고객센터 (MainLayout 내부로 이동) */}
+          {/* ✅ [수정] 찜하기 페이지를 여기(로그인 불필요 구역)로 이동 */}
+          <Route path="wishlist" element={<WishlistPage />} />
+
+          {/* 고객센터 */}
           <Route path="support">
             <Route index element={<FaqPage />} />
             <Route path="faq" element={<FaqPage />} />
@@ -69,7 +73,7 @@ const AppRouter = () => {
           </Route>
         </Route>
 
-        {/* 예약 플로우 - 로그인 필요 (헤더/푸터 없이 별도 레이아웃 사용) */}
+        {/* 예약 플로우 - 로그인 필요 */}
         <Route
           path="booking/:hotelId"
           element={
@@ -85,7 +89,7 @@ const AppRouter = () => {
           <Route path="complete" element={<BookingComplete />} />
         </Route>
 
-        {/* 마이페이지 - 로그인 필요 (MyPageLayout 사용) */}
+        {/* 마이페이지 - 로그인 필요 */}
         <Route
           path="mypage"
           element={
@@ -94,8 +98,7 @@ const AppRouter = () => {
             </ProtectedRoute>
           }
         >
-          {/* ✅ 마이페이지 메인은 보통 Overview를 보여줍니다 (Account는 별도 탭) */}
-          <Route index element={<MyOverviewPage />} /> 
+          <Route index element={<MyOverviewPage />} />
           <Route path="account" element={<MyAccountPage />} />
           <Route path="bookings">
             <Route index element={<MyBookingsPage />} />
@@ -104,21 +107,19 @@ const AppRouter = () => {
           <Route path="payment" element={<MyPaymentPage />} />
           <Route path="profile" element={<ProfilePage />} />
           <Route path="reviews" element={<MyReviewsPage />} />
-          <Route path="wishlist" element={<WishlistPage />} />
+          {/* wishlist 라우트는 위쪽 public 영역으로 이동했으므로 여기서 제거 */}
           <Route path="coupons" element={<MyCouponsPage />} />
           <Route path="points" element={<MyPointsPage />} />
           <Route path="inquiries" element={<MyInquiriesPage />} />
         </Route>
 
-        {/* 인증 레이아웃: 헤더 최소, 센터 정렬 등 */}
+        {/* 인증 레이아웃 */}
         <Route element={<AuthLayout />}>
           <Route path="login" element={<LoginPage />} />
           <Route path="signup" element={<SignupPage />} />
           <Route path="reset-password" element={<ResetPasswordPage />} />
-          {/* 결제 수단 추가도 로그인 필요하면 ProtectedRoute로 감싸는 게 좋습니다 */}
           <Route path="add-payment" element={<AddPaymentPage />} />
 
-          {/* 소셜 로그인 콜백 */}
           <Route path="oauth">
             <Route path="kakao/callback" element={<KakaoCallbackPage />} />
             <Route path="google/callback" element={<GoogleCallbackPage />} />
