@@ -1,3 +1,4 @@
+/* src/pages/search/SearchPage.jsx */
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,9 +14,9 @@ import {
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "../../styles/pages/search/SearchPage.scss";
-
-// ✅ 컴포넌트 임포트 확인
 import HotelCard from "../../components/hotel/HotelCard";
+/* ✅ 필터 사이드바 임포트 */
+import FilterSidebar from "./FilterSidebar";
 
 const SearchPage = () => {
   const [searchParams] = useSearchParams();
@@ -49,7 +50,7 @@ const SearchPage = () => {
     }
   };
 
-  /* 더미 데이터 */
+  /* 더미 데이터 (결과 리스트) */
   const searchResults = [
     {
       id: 1,
@@ -59,6 +60,8 @@ const SearchPage = () => {
       reviews: 371,
       price: 240,
       image: "/images/hotel1.jpg",
+      amenities: "5 Star Hotel",
+      options: "20+ Amenities",
     },
     {
       id: 2,
@@ -68,6 +71,8 @@ const SearchPage = () => {
       reviews: 54,
       price: 104,
       image: "/images/hotel2.jpg",
+      amenities: "Boutique",
+      options: "15+ Amenities",
     },
     {
       id: 3,
@@ -77,6 +82,19 @@ const SearchPage = () => {
       reviews: 120,
       price: 180,
       image: "/images/hotel3.jpg",
+      amenities: "Luxury",
+      options: "25+ Amenities",
+    },
+    {
+      id: 4,
+      name: "Swissotel The Bosphorus",
+      location: "Istanbul",
+      rating: 4.9,
+      reviews: 450,
+      price: 320,
+      image: "/images/hotel1.jpg",
+      amenities: "5 Star Hotel",
+      options: "30+ Amenities",
     },
   ];
 
@@ -95,7 +113,7 @@ const SearchPage = () => {
 
   return (
     <div className="search-page">
-      {/* 1. 상단 검색바 영역 (기존 코드 유지) */}
+      {/* 1. 상단 검색바 영역 */}
       <div className="search-bar-wrapper">
         <div className="search-container">
           {/* Destination */}
@@ -174,109 +192,34 @@ const SearchPage = () => {
 
             {/* 인원수 팝업 */}
             {showGuestPopup && (
-              <div
-                className="guest-popup"
-                style={{
-                  position: "absolute",
-                  top: "100%",
-                  left: 0,
-                  width: "100%",
-                  background: "#fff",
-                  borderRadius: "1.6rem",
-                  padding: "2rem",
-                  marginTop: "1rem",
-                  boxShadow: "0 1rem 3rem rgba(0,0,0,0.15)",
-                  zIndex: 20,
-                  border: "1px solid rgba(0,0,0,0.05)",
-                }}
-              >
-                {/* Rooms Counter */}
-                <div
-                  className="counter-row"
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <span
-                    className="label"
-                    style={{ fontSize: "1.4rem", fontWeight: 700 }}
-                  >
-                    Rooms
-                  </span>
-                  <div
-                    className="counter-controls"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "1.5rem",
-                    }}
-                  >
+              <div className="guest-popup">
+                <div className="counter-row">
+                  <span className="label">Rooms</span>
+                  <div className="counter-controls">
                     <button
                       onClick={() => handleCounter("rooms", "dec")}
                       disabled={rooms <= 1}
-                      style={btnStyle}
                     >
                       <FontAwesomeIcon icon={faMinus} />
                     </button>
-                    <span style={{ fontSize: "1.6rem", fontWeight: 700 }}>
-                      {rooms}
-                    </span>
-                    <button
-                      onClick={() => handleCounter("rooms", "inc")}
-                      style={btnStyle}
-                    >
+                    <span className="count">{rooms}</span>
+                    <button onClick={() => handleCounter("rooms", "inc")}>
                       <FontAwesomeIcon icon={faPlus} />
                     </button>
                   </div>
                 </div>
-
-                <div
-                  style={{
-                    height: "1px",
-                    background: "#eee",
-                    margin: "1.5rem 0",
-                  }}
-                ></div>
-
-                {/* Guests Counter */}
-                <div
-                  className="counter-row"
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <span
-                    className="label"
-                    style={{ fontSize: "1.4rem", fontWeight: 700 }}
-                  >
-                    Guests
-                  </span>
-                  <div
-                    className="counter-controls"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "1.5rem",
-                    }}
-                  >
+                <div className="divider"></div>
+                <div className="counter-row">
+                  <span className="label">Guests</span>
+                  <div className="counter-controls">
                     <button
                       onClick={() => handleCounter("guests", "dec")}
                       disabled={guests <= 1}
-                      style={btnStyle}
                     >
                       <FontAwesomeIcon icon={faMinus} />
                     </button>
-                    <span style={{ fontSize: "1.6rem", fontWeight: 700 }}>
-                      {guests}
-                    </span>
-                    <button
-                      onClick={() => handleCounter("guests", "inc")}
-                      style={btnStyle}
-                    >
+                    <span className="count">{guests}</span>
+                    <button onClick={() => handleCounter("guests", "inc")}>
                       <FontAwesomeIcon icon={faPlus} />
                     </button>
                   </div>
@@ -285,35 +228,58 @@ const SearchPage = () => {
             )}
           </div>
 
+          {/* 검색 버튼 */}
           <button className="btn-search">
             <FontAwesomeIcon icon={faSearch} />
           </button>
         </div>
       </div>
 
-      {/* ✅ 2. 메인 컨텐츠 영역 (레이아웃 변경됨) */}
+      {/* 2. 메인 컨텐츠 영역 (좌우 분할) */}
       <div className="container">
-        {/* 사이드바와 리스트를 감싸는 Flex 컨테이너 */}
-        <div className="search-content-layout">
-          
-          {/* 왼쪽: 필터 사이드바 */}
-          <div className="layout-sidebar">
+        {/* 그리드 레이아웃 */}
+        <div className="search-layout-grid">
+          {/* 왼쪽 사이드바 (필터) */}
+          <aside className="search-sidebar">
             <FilterSidebar />
-          </div>
+          </aside>
 
-          {/* 오른쪽: 호텔 리스트 */}
-          <div className="layout-results">
-            <div className="results-header">
-               <h3>Showing 4 of <span style={{color: '#FF8682'}}>257 places</span></h3>
+          {/* 오른쪽 메인 콘텐츠 (호텔 리스트) */}
+          <main className="search-content">
+            {/* 정렬 버튼 등 */}
+            <div
+              className="list-header"
+              style={{
+                marginBottom: "2rem",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <h2 style={{ fontSize: "2rem" }}>
+                Showing {searchResults.length} places
+              </h2>
+              <select
+                style={{
+                  padding: "0.8rem",
+                  borderRadius: "0.5rem",
+                  border: "1px solid #ccc",
+                }}
+              >
+                <option>Recommended</option>
+                <option>Price Low to High</option>
+              </select>
             </div>
-            
+
             <div className="results-list">
               {searchResults.map((hotel) => (
                 <HotelCard key={hotel.id} hotel={hotel} />
               ))}
             </div>
-          </div>
-          
+
+            {/* ✅ [추가] Show more results 버튼 */}
+            <button className="btn-show-more">Show more results</button>
+          </main>
         </div>
       </div>
     </div>
