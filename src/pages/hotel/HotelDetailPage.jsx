@@ -27,14 +27,13 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-/* 지도 라이브러리 */
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
 import "../../styles/pages/hotel/HotelDetailPage.scss";
 
-/* 지도 아이콘 깨짐 방지 */
+/* 지도 아이콘 설정 */
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl:
@@ -111,6 +110,9 @@ const HotelDetailPage = () => {
   const { hotelId } = useParams();
   const navigate = useNavigate();
   const [showBookingModal, setShowBookingModal] = useState(false);
+
+  /* ✅ [추가] 찜하기 상태 관리 */
+  const [isFavorite, setIsFavorite] = useState(false);
 
   const commonAmenities = [
     { icon: faSwimmingPool, name: "Outdoor pool" },
@@ -205,6 +207,7 @@ const HotelDetailPage = () => {
 
   const hotel = allHotels.find((item) => item.id === Number(hotelId));
 
+  /* 더미 리뷰 데이터 */
   const dummyReviews = [
     {
       id: 1,
@@ -261,7 +264,6 @@ const HotelDetailPage = () => {
   return (
     <div className="hotel-detail-page">
       <div className="container">
-        {/* 상단 헤더 (기존 동일) */}
         <div className="detail-header">
           <div className="header-left">
             <div className="title-row">
@@ -278,9 +280,14 @@ const HotelDetailPage = () => {
               <span className="unit">/night</span>
             </div>
             <div className="action-buttons">
-              <button className="btn-icon">
+              {/* ✅ [수정] 하트 버튼에 클릭 이벤트 & active 클래스 적용 */}
+              <button
+                className={`btn-icon ${isFavorite ? "active" : ""}`}
+                onClick={() => setIsFavorite(!isFavorite)}
+              >
                 <FontAwesomeIcon icon={faHeart} />
               </button>
+
               <button className="btn-icon">
                 <FontAwesomeIcon icon={faShareAlt} />
               </button>
@@ -294,7 +301,6 @@ const HotelDetailPage = () => {
           </div>
         </div>
 
-        {/* 이미지 갤러리 (기존 동일) */}
         <div className="image-gallery">
           <div className="main-image">
             <img src={hotel.images[0]} alt="Main" />
@@ -302,17 +308,15 @@ const HotelDetailPage = () => {
           <div className="sub-images">
             {hotel.images.slice(1, 5).map((img, index) => (
               <div key={index} className="sub-image-item">
-                <img src={img} alt={`Sub ${index}`} />
+                <img src={img} alt="Sub" />
                 {index === 3 && <div className="more-overlay">+15 Photos</div>}
               </div>
             ))}
           </div>
         </div>
 
-        {/* 하단 콘텐츠 */}
         <div className="content-wrapper">
           <div className="full-content">
-            {/* Overview (기존 동일) */}
             <section className="section overview">
               <h3>Overview</h3>
               <p className="description">{hotel.description}</p>
@@ -340,8 +344,6 @@ const HotelDetailPage = () => {
                 </div>
               </div>
             </section>
-
-            {/* 잔여 객실 (기존 동일) */}
             <section className="section available-rooms">
               <h3>Available Rooms</h3>
               <div className="room-list">
@@ -389,8 +391,6 @@ const HotelDetailPage = () => {
                 ))}
               </div>
             </section>
-
-            {/* 지도 (기존 동일) */}
             <section className="section map-location">
               <div className="map-header">
                 <h3>지도보기</h3>
@@ -428,8 +428,6 @@ const HotelDetailPage = () => {
                 </MapContainer>
               </div>
             </section>
-
-            {/* Amenities (기존 동일) */}
             <section className="section amenities">
               <h3>Amenities</h3>
               <div className="amenities-grid">
@@ -442,13 +440,11 @@ const HotelDetailPage = () => {
               </div>
             </section>
 
-            {/* ✅ [수정] Reviews 섹션 (사진 제거됨) */}
             <section className="section reviews">
               <div className="reviews-header">
                 <h3>Reviews</h3>
-                <button className="btn-write-review">Give your review</button>
+                <button className="btn-write-review">Write a review</button>
               </div>
-
               <div className="review-summary-large">
                 <span className="score">{hotel.rating}</span>
                 <div className="summary-text">
@@ -458,7 +454,6 @@ const HotelDetailPage = () => {
                   </span>
                 </div>
               </div>
-
               <div className="review-list">
                 {dummyReviews.map((review) => (
                   <div key={review.id} className="review-card">
@@ -475,20 +470,17 @@ const HotelDetailPage = () => {
                             {renderStars(review.rating)}
                           </span>
                         </div>
-
                         <span className="username">{review.user}</span>
                       </div>
                       <span className="date">{review.date}</span>
                     </div>
                     <div className="card-body">
                       <p className="content">{review.content}</p>
-                      {/* ✅ 이곳에 있던 이미지 렌더링 코드가 삭제되었습니다. */}
                     </div>
                   </div>
                 ))}
               </div>
-
-              {/* 페이지네이션 컨트롤러 */}
+              {/* 페이지네이션 */}
               <div className="pagination-controls">
                 <button className="btn-page prev">
                   <FontAwesomeIcon icon={faChevronLeft} />
@@ -503,7 +495,6 @@ const HotelDetailPage = () => {
         </div>
       </div>
 
-      {/* 예약 팝업 (기존 동일) */}
       {showBookingModal && (
         <div className="booking-modal-overlay">
           <div className="booking-modal">
