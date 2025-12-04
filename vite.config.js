@@ -15,6 +15,8 @@ export default defineConfig({
         target: 'http://172.22.48.1:3000', // 백엔드 주소
         changeOrigin: true,
         secure: false,
+        logLevel: 'silent', // 프록시 에러 로그 숨김
+        timeout: 5000, // 5초 타임아웃
       },
     },
   },
