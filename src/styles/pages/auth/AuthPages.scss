@@ -294,12 +294,13 @@
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
-        &.facebook {
-          color: #1877f2;
+        &.naver {
+          color: #03c75a;
+          font-weight: 700;
 
           &:hover {
-            border-color: #1877f2;
-            background: rgba(24, 119, 242, 0.05);
+            border-color: #03c75a;
+            background: rgba(3, 199, 90, 0.08);
           }
         }
 
@@ -312,12 +313,13 @@
           }
         }
 
-        &.apple {
-          color: #000;
+        &.kakao {
+          color: #3b1e1e;
+          font-weight: 700;
 
           &:hover {
-            border-color: #000;
-            background: rgba(0, 0, 0, 0.05);
+            border-color: #f7e600;
+            background: rgba(247, 230, 0, 0.15);
           }
         }
       }
