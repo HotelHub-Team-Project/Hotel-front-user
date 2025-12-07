@@ -1,25 +1,37 @@
 /* src/components/common/Header.jsx */
-import React, { useState } from "react";
+import React, { useState, useRef } from "react"; // ✅ useRef 추가
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHotel,
   faHeart,
   faBed,
+  faUser,
+  faCreditCard,
+  faCog,
+  faSignOutAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../../context/AuthContext";
 import { useWishlist } from "../../context/WishlistContext";
 import LogoutModal from "./LogoutModal";
 import "../../styles/components/common/Header.scss";
 
-const Header = ({ onMouseEnter, onMouseLeave }) => {
+const Header = () => {
   const { isAuthenticated, login, logout, user } = useAuth();
   const { getWishlistCount } = useWishlist();
   const navigate = useNavigate();
   const location = useLocation();
+
   const [showModal, setShowModal] = useState(false);
+<<<<<<< HEAD
   const [showUserMenu, setShowUserMenu] = useState(false);
   const wishlistCount = getWishlistCount();
+=======
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
+
+  // ✅ [추가] 딜레이를 관리하기 위한 ref
+  const timerRef = useRef(null);
+>>>>>>> a73f6f0 (12/07)
 
   const handleLogoutConfirm = () => {
     logout();
@@ -27,30 +39,84 @@ const Header = ({ onMouseEnter, onMouseLeave }) => {
     navigate("/");
   };
 
-  /* ✅ [수정] 중앙 로고 헤더를 보여줄 페이지 조건 추가 */
+  /* ✅ [수정] 마우스 진입 핸들러 (딜레이 취소 + 열기) */
+  const handleMouseEnter = () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+    setDropdownOpen(true);
+  };
+
+  /* ✅ [수정] 마우스 이탈 핸들러 (0.2초 뒤에 닫기) */
+  const handleMouseLeave = () => {
+    timerRef.current = setTimeout(() => {
+      setDropdownOpen(false);
+    }, 200); // 200ms(0.2초) 뒤에 닫힘 -> 마우스 이동할 시간 확보
+  };
+
   const showGolobeHeader =
     location.pathname === "/wishlist" ||
     location.pathname.startsWith("/booking") ||
     location.pathname.startsWith("/hotels");
 
-  /* ✅ [수정] 각 메뉴 활성화 상태 확인 */
   const isWishlistActive = location.pathname === "/wishlist";
   const isFindStaysActive =
     location.pathname.startsWith("/hotels") ||
     location.pathname.startsWith("/booking");
+
+  /* 유저 프로필 렌더링 함수 */
+  const renderUserProfile = () => (
+    <div
+      className="user-profile-wrapper"
+      onMouseEnter={handleMouseEnter} // ✅ 핸들러 교체
+      onMouseLeave={handleMouseLeave} // ✅ 핸들러 교체
+    >
+      <div className="user-simple" onClick={() => navigate("/mypage")}>
+        <div className="avatar-circle"></div>
+        <span>{user && user.name ? user.name : "Tomhoon"}</span>
+      </div>
+
+      {isDropdownOpen && (
+        <div className="user-dropdown-menu">
+          <div className="dropdown-profile-info">
+            <div className="avatar-large"></div>
+            <div className="info-text">
+              <span className="name">
+                {user && user.name ? user.name : "Tomhoon"}
+              </span>
+              <span className="status">Online</span>
+            </div>
+          </div>
+
+          <div className="dropdown-divider"></div>
+
+          <ul className="dropdown-list">
+            <li onClick={() => navigate("/mypage")}>
+              <FontAwesomeIcon icon={faUser} className="icon" /> 계정
+            </li>
+            <li onClick={() => navigate("/payments")}>
+              <FontAwesomeIcon icon={faCreditCard} className="icon" /> 결제내역
+            </li>
+            <li onClick={() => navigate("/settings")}>
+              <FontAwesomeIcon icon={faCog} className="icon" /> 설정
+            </li>
+          </ul>
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <>
       <header className={`header ${showGolobeHeader ? "wishlist-header" : ""}`}>
         <div className="inner">
           {showGolobeHeader ? (
-            /* CASE 1: 중앙 로고 헤더 (찜하기, 예약, 상세 페이지 등) */
+            /* CASE 1 */
             <>
               <div className="header-left wishlist-mode">
                 <Link to="/flights" className="nav-item">
                   <FontAwesomeIcon icon={faPlane} /> Find Flight
                 </Link>
-                {/* ✅ Find Stays에 active 클래스 적용 */}
                 <Link
                   to="/hotels"
                   className={`nav-item ${isFindStaysActive ? "active" : ""}`}
@@ -61,14 +127,11 @@ const Header = ({ onMouseEnter, onMouseLeave }) => {
 
               <div className="header-center">
                 <Link to="/" className="logo">
-                  {/* 로고 이미지 (없으면 텍스트) */}
-                  {/* <img src="/images/logo-icon.png" alt="golobe" className="logo-icon" /> */}
                   <span className="logo-text">golobe</span>
                 </Link>
               </div>
 
               <div className="header-right wishlist-mode">
-                {/* 찜하기 버튼 active 적용 */}
                 <Link
                   to="/wishlist"
                   className={`menu-text ${isWishlistActive ? "active" : ""}`}
@@ -129,7 +192,7 @@ const Header = ({ onMouseEnter, onMouseLeave }) => {
               </div>
             </>
           ) : (
-            /* CASE 2: 일반 헤더 (메인 등) */
+            /* CASE 2 */
             <>
               <div className="header-left">
                 <Link to="/" className="logo">
@@ -144,6 +207,7 @@ const Header = ({ onMouseEnter, onMouseLeave }) => {
                   <FontAwesomeIcon icon={faHeart} /> <span>찜하기</span>
                 </Link>
                 <div className="separator">|</div>
+
                 {isAuthenticated ? (
                   <>
                     <div

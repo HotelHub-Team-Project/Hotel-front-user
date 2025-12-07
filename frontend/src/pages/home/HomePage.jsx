@@ -31,7 +31,6 @@ const HomePage = () => {
 
       <PopularDestinations />
       <TravelMore />
-      <Newsletter />
     </div>
   );
 };

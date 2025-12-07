@@ -66,6 +66,7 @@ const AppRouter = () => {
 
           {/* 찜하기 페이지 */}
           <Route path="wishlist" element={<WishlistPage />} />
+          
 
           {/* ✅ [추가] Flight 페이지 */}
           <Route path="flights" element={<FlightSearchPage />} />
