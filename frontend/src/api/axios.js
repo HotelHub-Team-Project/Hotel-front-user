@@ -1,24 +1,18 @@
 import axios from 'axios';
 
-// 환경변수(VITE_API_URL or VITE_API_BASE_URL)를 우선 사용하고,
-// 값이 http://localhost:3000 처럼 /api 없이 들어오면 자동으로 /api를 붙입니다.
-const resolveBaseUrl = () => {
-    const envUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL;
-    if (!envUrl) return '/api';
-    const trimmed = envUrl.replace(/\/$/, '');
-    return trimmed.endsWith('/api') ? trimmed : `${trimmed}/api`;
-};
-
-const BASE_URL = resolveBaseUrl();
+// Prefer an explicit env value but fall back to the local dev proxy
+const BASE_URL = import.meta.env?.VITE_API_BASE_URL || '/api';
 
 const api = axios.create({
     baseURL: BASE_URL,
-    headers: { 'Content-Type': 'application/json' },
-    withCredentials: true,
-    timeout: 10000,
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    withCredentials: false,
+    timeout: 15000,
 });
 
-// 요청마다 토큰 자동 첨부
+// Attach bearer token when present
 api.interceptors.request.use((config) => {
     const token = localStorage.getItem('accessToken');
     if (token) {
@@ -26,5 +20,20 @@ api.interceptors.request.use((config) => {
     }
     return config;
 });
+
+// Standardize logging and bubble errors to callers
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response) {
+            console.error('API Error:', error.response.status, error.response.data);
+        } else if (error.request) {
+            console.error('No response from server:', error.request);
+        } else {
+            console.error('Error setting up request:', error.message);
+        }
+        return Promise.reject(error);
+    }
+);
 
 export default api;
